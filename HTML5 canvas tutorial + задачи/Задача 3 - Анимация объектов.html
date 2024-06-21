@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Падающие объекты</title>
+  <style>
+        body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f0f0f0;
+        }
+        #fallingObjectsCanvas {
+          background-color: #000;
+        }
+  </style>
+</head>
+<body>
+  <canvas id="fallingObjectsCanvas" width="500" height="500"></canvas>
+  <script>
+      const canvas = document.getElementById("fallingObjectsCanvas");
+      const ctx = canvas.getContext("2d");
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+
+      const objects = [];
+      const maxObjects = 20; 
+
+      function createObject() {
+        const x = Math.random() * canvasWidth;
+        const y = -10; 
+        const size = Math.random() * 5 + 8; 
+        const color = `rgba(255, 255, 255, ${Math.random()})`; 
+        const speed = Math.random() * 2 + 1; 
+        objects.push({ x, y, size, color, speed });
+      }
+
+      function drawObject(object) {
+        ctx.fillStyle = object.color;
+        ctx.beginPath();
+        ctx.arc(object.x, object.y, object.size, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+
+      function updateObjects() {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+        for (let i = 0; i < objects.length; i++) {
+          const object = objects[i];
+          object.y += object.speed;
+
+          if (object.y > canvasHeight) {
+            objects.splice(i, 1);
+            if (Math.random() < 0.1) { 
+              createObject();
+            }
+          } else {
+            drawObject(object);
+          }
+        }
+      }
+
+      function animate() {
+        updateObjects();
+        requestAnimationFrame(animate);
+      }
+
+      for (let i = 0; i < maxObjects; i++) {
+        createObject();
+      }
+
+      animate();
+  </script>
+</body>
+</html>

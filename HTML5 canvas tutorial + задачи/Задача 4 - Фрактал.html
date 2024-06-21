@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Фрактал</title>
+  <style>
+        body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f0f0f0;
+        }
+        #fractalCanvas {
+          background-color: #4a1517;
+          border: 1px solid #ccc;
+        }
+  </style>
+</head>
+<body>
+  <canvas id="fractalCanvas" width="1000" height="1000"></canvas>
+  <br>
+  <button id="increaseDepth">Увеличить глубину</button>
+  <script>
+        const canvas = document.getElementById("fractalCanvas");
+        const ctx = canvas.getContext("2d");
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        const increaseDepthButton = document.getElementById("increaseDepth");
+
+        let depth = 0;
+
+        function drawSquare(x, y, size) {
+          ctx.fillRect(x, y, size, size);
+        }
+
+        function drawSierpinskiCarpet(x, y, size, depth) {
+          if (depth === 0) {
+            drawSquare(x, y, size);
+          } else {
+            const newSize = size / 3;
+            for (let i = 0; i < 3; i++) {
+              for (let j = 0; j < 3; j++) {
+                if (i !== 1 || j !== 1) { // Skip the center square
+                  drawSierpinskiCarpet(x + i * newSize, y + j * newSize, newSize, depth - 1);
+                }
+              }
+            }
+          }
+        }
+
+        function drawFractal() {
+          ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+          drawSierpinskiCarpet(0, 0, canvasWidth, depth);
+        }
+
+        increaseDepthButton.addEventListener("click", () => {
+          depth++;
+          drawFractal();
+        });
+
+        drawFractal();
+  </script>
+</body>
+</html>

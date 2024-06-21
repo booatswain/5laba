@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Часики</title>
+  <style>
+        body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f0f0f0;
+        }
+        #clockCanvas {
+        background-color: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+  </style>
+</head>
+<body>
+  <canvas id="clockCanvas" width="1000" height="1000"></canvas>
+  <script>
+        const canvas = document.getElementById("clockCanvas");
+        const ctx = canvas.getContext("2d");
+        const radius = canvas.width / 2;
+
+        function drawClock() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.beginPath();
+        ctx.arc(radius, radius, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = "white";
+        ctx.fill();
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 5;
+        ctx.stroke();
+
+        for (let i = 0; i < 12; i++) {
+            const angle = (i * Math.PI) / 6;
+            const x = radius + radius * 0.9 * Math.cos(angle);
+            const y = radius + radius * 0.9 * Math.sin(angle);
+            ctx.beginPath();
+            ctx.moveTo(radius, radius);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = "#DCDCDC";
+            ctx.lineWidth = 5;
+            ctx.stroke();
+        }
+
+        const now = new Date();
+        const hour = now.getHours() % 12;
+        const minute = now.getMinutes();
+        const second = now.getSeconds();
+
+        drawHand(hour, 0, radius * 0.5, "black", 5);
+        drawHand(minute, 0, radius * 0.7, "black", 3);
+        drawHand(second, 0, radius * 0.8, "red", 2);
+
+        ctx.beginPath();
+        ctx.arc(radius, radius, 5, 0, 2 * Math.PI);
+        ctx.fillStyle = "black";
+        ctx.fill();
+
+        requestAnimationFrame(drawClock);
+        }
+
+        function drawHand(value, offset, length, color, width) {
+        const angle = ((value + offset) * Math.PI) / 30;
+        const x = radius + length * Math.cos(angle);
+        const y = radius + length * Math.sin(angle);
+
+        ctx.beginPath();
+        ctx.moveTo(radius, radius);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.stroke();
+        }
+
+        drawClock();
+
+  </script>
+</body>
+</html>
